@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @tourist_destination.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @tourist_destination.description %>
+</p>
+
+<%= link_to 'Edit', edit_tourist_destination_path(@tourist_destination) %> |
+<%= link_to 'Back', tourist_destinations_path %>

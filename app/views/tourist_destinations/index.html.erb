@@ -1,0 +1,27 @@
+<h1>Listing tourist_destinations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tourist_destinations.each do |tourist_destination| %>
+      <tr>
+        <td><%= tourist_destination.title %></td>
+        <td><%= tourist_destination.description %></td>
+        <td><%= link_to 'Show', tourist_destination %></td>
+        <td><%= link_to 'Edit', edit_tourist_destination_path(tourist_destination) %></td>
+        <td><%= link_to 'Destroy', tourist_destination, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Tourist destination', new_tourist_destination_path %>
