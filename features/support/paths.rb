@@ -5,6 +5,8 @@ module NavigationHelpers
     case page_name
       when /new tourist destination/
         new_tourist_destination_path
+      when /create tourist destination/
+        tourist_destinations_path
       else
         raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
           "Now, go and add a mapping in #{__FILE__}"

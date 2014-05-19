@@ -41,9 +41,9 @@ gem 'spring',        group: :development
 gem 'pg'
 
 group :test do
-  gem 'cucumber-rails', :require => false
-  # database_cleaner is not required, but highly recommended
+  gem 'cucumber-rails', require: false
   gem 'database_cleaner'
+  gem 'shoulda-matchers', require: false
 end
 
 group :development, :test do
