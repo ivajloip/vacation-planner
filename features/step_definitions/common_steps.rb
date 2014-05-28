@@ -14,6 +14,6 @@ Then(/I am on the (.+) page/) do |page_name|
   expect(current_path).to eq(path_to(page_name))
 end
 
-And(/I see an error message that contains "([^"]+)"/) do |text|
+Then(/I see an error message that contains "([^"]+)"/) do |text|
   expect(page).to have_content(text)
 end

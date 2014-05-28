@@ -20,140 +20,194 @@ require 'spec_helper'
 
 describe TouristDestinationsController do
 
-  # This should return the minimal set of attributes required to create a valid
-  # TouristDestination. As you add validations to TouristDestination, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) { { "title" => "MyString", "description" =>
-                             "MyDescription" } }
-
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # TouristDestinationsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:tourist_destination) { mock_model TouristDestination }
+  let(:tourist_destination_id) { '42' }
 
   describe "GET index" do
     it "assigns all tourist_destinations as @tourist_destinations" do
-      tourist_destination = TouristDestination.create! valid_attributes
-      get :index, {}, valid_session
-      expect(assigns(:tourist_destinations)).to eq([tourist_destination])
+      expect(TouristDestination).to receive(:all).and_return('tourist_destination')
+
+      get :index
+
+      expect(assigns(:tourist_destinations)).to eq('tourist_destination')
     end
   end
 
   describe "GET show" do
+    it "looks up the tourist_destination by id" do
+      expect(TouristDestination).to receive(:find).with(tourist_destination_id)
+
+      get :show, id: tourist_destination_id
+    end
+
     it "assigns the requested tourist_destination as @tourist_destination" do
-      tourist_destination = TouristDestination.create! valid_attributes
-      get :show, {:id => tourist_destination.to_param}, valid_session
+      expect(TouristDestination).to receive(:find).and_return(tourist_destination)
+
+      get :show, id: tourist_destination_id
+
       expect(assigns(:tourist_destination)).to eq(tourist_destination)
     end
   end
 
   describe "GET new" do
     it "assigns a new tourist_destination as @tourist_destination" do
-      get :new, {}, valid_session
-      expect(assigns(:tourist_destination)).to be_a_new(TouristDestination)
+      expect(TouristDestination).to receive(:new).and_return(tourist_destination)
+
+      get :new
+
+      expect(assigns(:tourist_destination)).to eq(tourist_destination)
     end
   end
 
   describe "GET edit" do
     it "assigns the requested tourist_destination as @tourist_destination" do
-      tourist_destination = TouristDestination.create! valid_attributes
-      get :edit, {:id => tourist_destination.to_param}, valid_session
-      expect(assigns(:tourist_destination)).to eq(tourist_destination)
+      expect(TouristDestination).to receive(:find).with(tourist_destination_id).
+        and_return('tourist_destination')
+
+      get :edit, id: tourist_destination_id
+
+      expect(assigns(:tourist_destination)).to eq('tourist_destination')
     end
   end
 
   describe "POST create" do
+    let(:arguments) { 'tourist_destination_arguments' }
+
+    def create_toutirst_destination
+      post :create, tourist_destination: arguments
+    end
+
+    before do
+      allow(TouristDestination).to receive(:new).and_return(tourist_destination)
+      allow(tourist_destination).to receive(:save)
+      expect(arguments).to receive(:permit).and_return(arguments)
+    end
+
     describe "with valid params" do
-      it "creates a new TouristDestination" do
-        expect {
-          post :create, {:tourist_destination => valid_attributes}, valid_session
-        }.to change(TouristDestination, :count).by(1)
+      it "initiatializes a new TouristDestination with params[:tourist_destination]" do
+        expect(TouristDestination).to receive(:new).with('tourist_destination_arguments').
+          and_return(tourist_destination)
+
+        create_toutirst_destination
       end
 
       it "assigns a newly created tourist_destination as @tourist_destination" do
-        post :create, {:tourist_destination => valid_attributes}, valid_session
-        expect(assigns(:tourist_destination)).to be_a(TouristDestination)
-        expect(assigns(:tourist_destination)).to be_persisted
+        create_toutirst_destination
+
+        expect(assigns(:tourist_destination)).to eq(tourist_destination)
       end
 
       it "redirects to the created tourist_destination" do
-        post :create, {:tourist_destination => valid_attributes}, valid_session
-        expect(response).to redirect_to(TouristDestination.last)
+        expect(tourist_destination).to receive(:save).and_return(true)
+
+        create_toutirst_destination
+
+        expect(response).to redirect_to(tourist_destination)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved tourist_destination as @tourist_destination" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(TouristDestination).to receive(:save).and_return(false)
-        post :create, {:tourist_destination => { "title" => "invalid value" }}, valid_session
-        expect(assigns(:tourist_destination)).to be_a_new(TouristDestination)
+        expect(tourist_destination).to receive(:save).and_return(false)
+
+        create_toutirst_destination
+
+        expect(assigns(:tourist_destination)).to eq(tourist_destination)
       end
 
       it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(TouristDestination).to receive(:save).and_return(false)
-        post :create, {:tourist_destination => { "title" => "invalid value" }}, valid_session
-        expect(response).to render_template("new")
+        expect(tourist_destination).to receive(:save).and_return(false)
+
+        create_toutirst_destination
+
+        expect(response).to render_template :new
       end
     end
   end
 
   describe "PUT update" do
+    let(:arguments) { 'tourist_destination_arguments' }
+
+    def update_tourist_destination
+      put :update, id: tourist_destination_id, tourist_destination: arguments
+    end
+
+    before do
+      allow(TouristDestination).to receive(:find).and_return(tourist_destination)
+      expect(arguments).to receive(:permit).and_return(arguments)
+      allow(tourist_destination).to receive(:update).and_return(false)
+    end
+
     describe "with valid params" do
-      it "updates the requested tourist_destination" do
-        tourist_destination = TouristDestination.create! valid_attributes
-        # Assuming there are no other tourist_destinations in the database, this
-        # specifies that the TouristDestination created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        expect_any_instance_of(TouristDestination).to receive(:update).with({ "title" => "MyString" })
-        put :update, {:id => tourist_destination.to_param, :tourist_destination => { "title" => "MyString" }}, valid_session
+      it "looks up the TouristDestination by id" do
+        expect(TouristDestination).to receive(:find).with(tourist_destination_id).
+          and_return(tourist_destination)
+
+        update_tourist_destination
+      end
+
+      it "invokes update with params[:tourist_destination]" do
+        expect(tourist_destination).to receive(:update).with(arguments)
+
+        update_tourist_destination
       end
 
       it "assigns the requested tourist_destination as @tourist_destination" do
-        tourist_destination = TouristDestination.create! valid_attributes
-        put :update, {:id => tourist_destination.to_param, :tourist_destination => valid_attributes}, valid_session
+        update_tourist_destination
+
         expect(assigns(:tourist_destination)).to eq(tourist_destination)
       end
 
-      it "redirects to the tourist_destination" do
-        tourist_destination = TouristDestination.create! valid_attributes
-        put :update, {:id => tourist_destination.to_param, :tourist_destination => valid_attributes}, valid_session
+      it "redirects to the tourist_destination on success" do
+        expect(tourist_destination).to receive(:update).with(arguments).
+          and_return(true)
+
+        update_tourist_destination
+
         expect(response).to redirect_to(tourist_destination)
       end
     end
 
     describe "with invalid params" do
       it "assigns the tourist_destination as @tourist_destination" do
-        tourist_destination = TouristDestination.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(TouristDestination).to receive(:save).and_return(false)
-        put :update, {:id => tourist_destination.to_param, :tourist_destination => { "title" => "invalid value" }}, valid_session
+        update_tourist_destination
+
         expect(assigns(:tourist_destination)).to eq(tourist_destination)
       end
 
       it "re-renders the 'edit' template" do
-        tourist_destination = TouristDestination.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(TouristDestination).to receive(:save).and_return(false)
-        put :update, {:id => tourist_destination.to_param, :tourist_destination => { "title" => "invalid value" }}, valid_session
-        expect(response).to render_template("edit")
+        update_tourist_destination
+
+        expect(response).to render_template(:edit)
       end
     end
   end
 
   describe "DELETE destroy" do
-    it "destroys the requested tourist_destination" do
-      tourist_destination = TouristDestination.create! valid_attributes
-      expect {
-        delete :destroy, {:id => tourist_destination.to_param}, valid_session
-      }.to change(TouristDestination, :count).by(-1)
+    before do
+      allow(TouristDestination).to receive(:find).and_return(tourist_destination)
+      allow(tourist_destination).to receive(:destroy)
+    end
+
+    def delete_tourist_destination
+      delete :destroy, id: tourist_destination_id
+    end
+
+    it "looks up the tourist_destination by id" do
+      expect(TouristDestination).to receive(:find).and_return(tourist_destination)
+
+      delete_tourist_destination
+    end
+
+    it "attempts to destroy the requested tourist_destination" do
+      expect(tourist_destination).to receive(:destroy)
+
+      delete_tourist_destination
     end
 
     it "redirects to the tourist_destinations list" do
-      tourist_destination = TouristDestination.create! valid_attributes
-      delete :destroy, {:id => tourist_destination.to_param}, valid_session
+      delete_tourist_destination
+
       expect(response).to redirect_to(tourist_destinations_url)
     end
   end
