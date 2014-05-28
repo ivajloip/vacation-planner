@@ -69,6 +69,6 @@ class TouristDestinationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tourist_destination_params
-      params.require(:tourist_destination).permit(:title, :description)
+      params.require(:tourist_destination).permit(:title, :description, :country_id)
     end
 end

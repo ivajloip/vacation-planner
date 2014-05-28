@@ -5,9 +5,11 @@ Feature: TouristDestination
   time to arrive, type of activity, etc.
 
   Scenario: Create TouristDestination
+    Given There is a country "Bulgaria"
     When I go to the new tourist destination page
     And I fill-in the 'tourist_destination_title' with 'My Title'
     And I fill-in the 'tourist_destination_description' with 'My description'
+    And I select 'Bulgaria' in 'tourist_destination_country_id'
     And I click "Submit"
     And I go to the tourist destination list page
     Then I can see destination with title "My Title" in the list of destinations
