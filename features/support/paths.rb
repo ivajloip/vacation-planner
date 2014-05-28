@@ -9,6 +9,10 @@ module NavigationHelpers
         tourist_destinations_path
       when /tourist destination list/
         tourist_destinations_path
+      when /new country/
+        new_country_path
+      when /countries list/
+        countries_path
       else
         raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
           "Now, go and add a mapping in #{__FILE__}"
